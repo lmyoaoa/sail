@@ -1,7 +1,7 @@
 sail框架
 ====
 
-php framework/一个php框架
+php framework/一个简单，高效的php框架
 
 
 项目简介：
