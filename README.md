@@ -15,36 +15,30 @@ sail框架
 
 3. 配置nginx/apache
 
-3.1 放出个人的nginx配置供参考
+  3.1 nginx:放出个人的nginx配置供参考
+
     server {
-        listen       8081;
-        server_name  dev.sail.com;
+        listen       8081;  #这个端口改成默认80
+        server_name  dev.sail.com;  #配置访问url
         location / {
-            root   /usr/htdocs/sail/sail;
+            root   /usr/htdocs/sail;   #框架目录
             index  index.html index.htm index.php;
       
-            #将所有请求rewrite到index.php
-            #if (!-e $request_filename){
-                rewrite ^/(.*)$ /index.php?_ac=$1 last;
-            #}
-            #rewrite ^/article/(\d+).html$          /article.php?id=$1 last;
-
         }
         error_log  /var/log/nginx/sail.cn.log;
 
         error_page  404              /404.html;
         location ~ \.php$ {
-            root   /usr/htdocs/sail/sail;
+            root   /usr/htdocs/sail;
             fastcgi_pass    127.0.0.1:9000;
             fastcgi_index index.php;
             fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
             include        fastcgi_params;
         }
 
+        #将所有请求rewrite到index.php
+        rewrite ^/(.*)$ /index.php?_ac=$1 last;
     }
-
- #将所有请求rewrite到index.php
- rewrite ^/(.*)$ /index.php?_ac=$1 last;
 
 更新日志
 ====
