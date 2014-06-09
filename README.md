@@ -17,6 +17,7 @@ sail框架
 
   3.1 nginx:放出个人的nginx配置供参考
 
+    #nginx配置文件
     server {
         listen       8081;  #这个端口改成默认80
         server_name  dev.sail.com;  #配置访问url
