@@ -1,0 +1,192 @@
+<?php
+/**
+ * HTTP获取相关操作
+ * @author limingyou
+ */
+
+class Request {
+    /**
+     *  判断 http method 是否为get
+     */
+    public static function isGet() {
+        return $_SERVER['REQUEST_METHOD'] == 'GET';
+    }
+
+    /**
+     * 判断页面是否为post请求
+     * @return boolean
+     */
+    public static function isPost() {
+        return $_SERVER['REQUEST_METHOD'] == 'POST';
+    }
+    
+    private static function _stripSlashes(&$arr) {
+        if (is_array ($arr)) {
+            foreach ($arr as &$v) {
+                self::_stripSlashes($v);
+            }
+        } else {
+            $arr = stripslashes($arr);
+        }
+    }
+
+    /**
+     * 魔术引用问题
+     * */
+    public static function filterStripSlashes() {
+        self::_stripSlashes($_GET);
+        self::_stripSlashes($_POST);
+        self::_stripSlashes($_COOKIE);
+        self::_stripSlashes($_REQUEST);
+    }
+
+    /**
+    * 取得当前页面url
+    */
+    public static function getCurrentUrl() {
+        $pageURL = 'http';
+        if (! empty ($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") $pageURL .= "s";
+        $pageURL .= "://";
+        $pageURL .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        return $pageURL;
+    }
+
+    private static function _stripTags($string, $isHTML=false) {
+        return !$isHTML ? strip_tags($string) : $string;
+    }
+
+    /**
+     * 获取POST中的数据
+     * @param $key				POST中的key
+     * @param $default			如果数据不存在，默认返回的值。默认情况下为false
+	 * @param $isHTML           返回的结果中是否允许html标签，默认为false
+     * @return string
+     */
+    public static function getPOST($key, $default = false, $isHTML= false) {
+        if (array_key_exists($key, $_POST)) {
+            return self::_stripTags($_POST[$key], $isHTML);
+        }
+        return $default;
+    }
+
+    /**
+     * 获取GET中的数据
+     * @param $key				GET中的key
+     * @param $default			如果数据不存在，默认返回的值。默认情况下为false
+	 * @param $isHTML          返回的结果中是否允许html标签，默认为false
+     * @return string
+     */
+    public static function getGET($key='', $default = false, $isHTML = false) {
+        if( $key == '' ) {
+            return self::_stripTags($_GET[$key], $isHTML);
+        }
+        if (array_key_exists($key, $_GET)) {
+            return self::_stripTags($_GET[$key], $isHTML);
+        }
+        return $default;
+    }
+
+    /**
+     * 获取REQUEST中的数据
+     * @param $key				REQUEST中的key
+     * @param $default			如果数据不存在，默认返回的值。默认情况下为false
+     * @param $isHTML          返回的结果中是否允许html标签，默认为false
+     * @return string
+     * */
+    public static function getREQUEST($key, $default = false, $isHTML = false) {
+        if (array_key_exists($key, $_REQUEST)) {
+            return self::_stripTags($_REQUEST[$key], $isHTML);
+        }
+        return $default;
+    }
+
+	
+	/// 获取COOKIE中的数据
+	/// @param $key             COOKIE中的key
+	/// @param $default         如果数据不存在，默认返回的值。默认情况下为false
+	/// @param $isHTML          返回的结果中是否允许html标签，默认为false
+	/// @return string
+	public static function getCOOKIE($key, $default = false, $isHTML = false) {
+		if (isset ($_COOKIE[$key])) {
+            return self::_stripTags($_COOKIE[$key], $isHTML);
+		}
+		return $default;
+	}
+
+    /**
+     * 获取用户ip
+     * @param $useInt			是否将ip转为int型，默认为true
+     * @param $returnAll		如果有多个ip时，是否会部返回。默认情况下为false
+     * @return string|array|false
+     */
+    public static function getIp($useInt = true, $returnAll=false) {
+        $ip = getenv('HTTP_CLIENT_IP');
+		if($ip && strcasecmp($ip, "unknown") && !preg_match("/192\.168\.\d+\.\d+/", $ip)) {
+            return self::_returnIp($ip, $useInt, $returnAll);
+		}
+        
+        $ip = getenv('HTTP_X_FORWARDED_FOR');
+        if($ip && strcasecmp($ip, "unknown")) {
+            return self::_returnIp($ip, $useInt, $returnAll);
+        }
+
+        $ip = getenv('REMOTE_ADDR');
+        if($ip && strcasecmp($ip, "unknown")) {
+            return self::_returnIp($ip, $useInt, $returnAll);
+        }
+
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+            if($ip && strcasecmp($ip, "unknown")) {
+                return self::_returnIp($ip, $useInt, $returnAll);
+            }
+        }
+        
+		return false;
+    }
+
+    private static function _returnIp($ip, $useInt, $returnAll) {
+        if (!$ip) return false;
+
+        $ips = preg_split("/[，, _]+/", $ip);
+        if (!$returnAll) {
+            $ip = $ips[count($ips)-1];
+            return $useInt ? self::ip2long($ip) : $ip;
+        }
+
+        $ret = array();
+        foreach ($ips as $ip) {
+            $ret[] = $useInt ? self::ip2long($ip) : $ip;
+        }
+        return $ret;
+    }
+
+    /**
+    对php原ip2long的封装，原函数在win系统下会出现负数
+    @param string $ip
+    @return int
+    */
+    public static function ip2long($ip) {
+        return sprintf('%u', ip2long ($ip));
+    }
+
+    /**
+    对php原long2ip的封装
+    @param int $long
+    @return string
+    */
+    public static function long2ip($long) {
+        return long2ip($long);
+    }
+    
+    /**
+     * 获取当前参数串
+     */
+    public static function getCurrentQuery() {
+        $current = RequestUtil::getCurrentUrl();
+        $s = parse_url($current);
+        return $s['query'];
+    }
+
+}
+
