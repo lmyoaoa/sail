@@ -1,6 +1,6 @@
 <?php
 
-class indexInterface {
+class IndexInterface {
 
     function __construct() {
         $mod = new indexModel();

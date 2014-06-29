@@ -1,8 +1,10 @@
 <?php
 
-class indexModel extends Model {
+class IndexModel extends Model {
 
     public function __construct() {
         echo 'model';
     }
+
+
 }

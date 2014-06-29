@@ -13,7 +13,8 @@ class IndexPage extends Controller {
     //加载模板
     public function listAction() {
         print_r($_GET);
-        $m = new IndexInterface();
+        $m = new IndexInterfacex();
+        exit;
         $this->render( 'list.html', array(
             'kk'=>22,
             'vv'=>'33',
