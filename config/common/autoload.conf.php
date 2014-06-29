@@ -13,8 +13,11 @@ return array(
 	'BaseException'     => FRAMEWORK_PATH . 'core/BaseException.class.php',
 	'Controller'        => FRAMEWORK_PATH . 'core/Controller.class.php',
 	'View'              => FRAMEWORK_PATH . 'core/View.class.php',
+	'Model'             => FRAMEWORK_PATH . 'core/Model.class.php',
 
     //框架下自动加载
+	'Mysql'             => FRAMEWORK_PATH . 'util/db/Mysql.class.php',
+
 	'Pinyin'            => FRAMEWORK_PATH . 'util/common/Pinyin.class.php',
 	'Ip'                => FRAMEWORK_PATH . 'util/common/Ip.class.php',
 	'Session'           => FRAMEWORK_PATH . 'util/common/Session.class.php',

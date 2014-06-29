@@ -33,7 +33,7 @@ class Autoloader {
 	}
 
     private static function _setInterfaceAndModelClass($className) {
-        //try {
+        try {
             //判断是否model
             $isModel = strpos($className, 'Model');
             if( $isModel === false ) {
@@ -42,17 +42,13 @@ class Autoloader {
                 $file = dirname(FRAMEWORK_PATH) . '/api/model/' . $className . '.class.php';
             }
 
-            /*
             if( !file_exists($file) ) {
                 throw new BaseException('没有找到类：' . $className . '，请确认文件是否存在');
             }
-            */
             require $file;
-        /*
         }catch(Exception $e) {
             echo $e->getMessage();
         }
-        */
 
         return true;
     }
