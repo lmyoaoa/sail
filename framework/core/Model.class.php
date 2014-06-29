@@ -7,6 +7,44 @@
  */
 
 abstract class Model {
+    protected $MasterConf;
+    protected $SlaveConf;
+    protected $dbName;
+
+    //表名
+    protected $tableName;
+
+    //表字段
+    protected $fields;
+
+    //主从库变量
+    protected $mdb;
+    protected $sdb;
+
+    function __construct() {
+        $this->_init();
+
+        $this->mdb = new Mysql($this->MasterConf, $this->dbName, $this->tableName);
+        $this->sdb = new Mysql($this->SlaveConf, $this->dbName, $this->tableName);
+    }
+
+    public function getRows() {
+        $db = $this->getDb();
+        return $db->getRows();
+    }
+
+    public function getFields($table='') {
+        $db = $this->getDb();
+        return $db->getFields($table);
+    }
+
+    private function getDb($master=false) {
+        return $master ? $this->mdb : $this->sdb;
+    }
+
+    //子类中需初始化
+    abstract protected function _init();
+
     protected function __before_save() {}
     protected function __after_save() {}
 

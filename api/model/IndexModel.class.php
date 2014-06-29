@@ -3,8 +3,14 @@
 class IndexModel extends Model {
 
     public function __construct() {
-        echo 'model';
+        parent::__construct();
     }
 
+    protected function _init() {
+        $this->dbName = MysqlConf::MASTER;
+        $this->tableName = 'test';
+        $this->MasterConf = MysqlConf::Master();
+        $this->SlaveConf = MysqlConf::Slave();
+    }
 
 }

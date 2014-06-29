@@ -15,6 +15,9 @@ return array(
 	'View'              => FRAMEWORK_PATH . 'core/View.class.php',
 	'Model'             => FRAMEWORK_PATH . 'core/Model.class.php',
 
+    //配置类
+	'MysqlConf'         => CONF_PATH . 'mysql.conf.php',
+
     //框架下自动加载
 	'Mysql'             => FRAMEWORK_PATH . 'util/db/Mysql.class.php',
 
