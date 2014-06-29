@@ -43,14 +43,51 @@ class Mysql {
 
     /**
      * 查询数据表
+     * @param string $fields
+     * @param array $where 查询条件数组
+     * array(
+            array('name', '=', 'lmyoaoa'),
+            array('number', '>', 15),
+            array('id', 'in', ''),
+            array('id', 'between', ''),
+        )
      */
-    public function getRows() {
+    public function getRows($fields='*', $where=array(), $page=1, $size=10, $orderBy='') {
+        $formatData = $this->_formatWhere($where);
+        $where = $formatData['where']=='' ? '' : ' where ' . $formatData['where'];
+
         $conn = $this->getConnect();
-        $sql = "select * from {$this->tableName}";
-        $cq = $conn->query($sql);
-        $cq->setFetchMode(PDO::FETCH_ASSOC);
-        $rows = $cq->fetchAll();
-        return $rows;
+        $sth = $conn->prepare('SELECT ' . $fields . ' FROM ' . $this->tableName . $where);
+        $res = $sth->execute($formatData['data']);
+        $result = $sth->fetchAll();
+        return $result;
+    }
+
+    /**
+     * 将array数组格式化成数据库查询的格式
+     * @param array $array
+     * key string 键=>值（字符串
+     */
+    private function _formatWhere($array) {
+        $formatData = array(
+            'where'=>'',
+            'data'=>array(),
+        );
+        if( empty($array) ) {
+            return $formatData;
+        }
+
+        foreach( $array as $k => $v ) {
+            $preBra = $endBra = '';
+            if( !empty($v[2]) ) {
+                $key = ':' . $v[0];
+                $formatData['where'][] = $v[0] . $v[1] . $key;
+                $formatData['data'][$key] = $v[2];
+            }
+        }
+
+        $formatData['where'] = implode(' and ', $formatData['where']);
+        return $formatData;
     }
 
     /**

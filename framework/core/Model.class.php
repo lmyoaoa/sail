@@ -28,14 +28,15 @@ abstract class Model {
         $this->sdb = new Mysql($this->SlaveConf, $this->dbName, $this->tableName);
     }
 
-    public function getRows() {
+
+    public function getRows($fields='*', $where=array(), $page=1, $size=10, $orderBy='') {
         $db = $this->getDb();
-        return $db->getRows();
+        return $db->getRows($fields='*', $where, $page, $size, $orderBy);
     }
 
-    public function getFields($table='') {
+    public function getFields() {
         $db = $this->getDb();
-        return $db->getFields($table);
+        return $db->getFields();
     }
 
     private function getDb($master=false) {
@@ -45,17 +46,5 @@ abstract class Model {
     //子类中需初始化
     abstract protected function _init();
 
-    protected function __before_save() {}
-    protected function __after_save() {}
-
-    protected function __before_insert() {}
-    protected function __after_insert() {}
-
-    protected function __before_update() {}
-    protected function __after_update() {}
-
-    protected function __before_delete() {}
-    protected function __after_delete() {}
-    
     
 }
