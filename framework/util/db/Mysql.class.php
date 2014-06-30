@@ -51,13 +51,19 @@ class Mysql {
             array('id', 'in', ''),
             array('id', 'between', ''),
         )
+       @param int $page
+       @param int $size
+       @param string $orderBy etc: 'order by id desc'
      */
     public function getRows($fields='*', $where=array(), $page=1, $size=10, $orderBy='') {
         $formatData = $this->_formatWhere($where);
         $where = $formatData['where']=='' ? '' : ' where ' . $formatData['where'];
+        $start = ($page -1) * $size;
 
         $conn = $this->getConnect();
-        $sth = $conn->prepare('SELECT ' . $fields . ' FROM ' . $this->tableName . $where);
+        $sth = $conn->prepare('SELECT ' . $fields . ' FROM ' . $this->tableName . $where 
+            . ' ' . $orderBy . ' limit ' . $start . ','.$size );
+            var_dump($sth);
         $res = $sth->execute($formatData['data']);
         $result = $sth->fetchAll();
         return $result;
