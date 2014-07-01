@@ -28,10 +28,33 @@ abstract class Model {
         $this->sdb = new Mysql($this->SlaveConf, $this->dbName, $this->tableName);
     }
 
+    /**
+     * 查询数据表
+     * @param string $fields
+     * @param array $where 查询条件数组
+     * array(
+            array('name', '=', 'lmyoaoa'),
+            array('number', '>', 15),
+            array('id', 'in', array(1,2,3), false),     //此处false/0代表是否给数组加上单引号
+            array('id', 'between', ''),
 
+            'xxx=0 and oo=9 or jj=3' //自定义sql
+       )
+       @param int $page
+       @param int $size
+       @param string $orderBy etc: 'order by id desc'
+     */
     public function getRows($fields='*', $where=array(), $page=1, $size=10, $orderBy='') {
         $db = $this->getDb();
         return $db->getRows($fields='*', $where, $page, $size, $orderBy);
+    }
+
+    /**
+     * 获取总行数
+     */
+    public function getRowsCount($where=array(), $formatData=false) {
+        $db = $this->getDb();
+        return $db->getRowsCount($where, $formatData);
     }
 
     public function getFields() {
