@@ -33,9 +33,14 @@ abstract class Model {
         return $db->add($array, $returnID);
     }
 
-    public function update( $where, $update ) {
+    public function update( $where, $update, $limit=1 ) {
         $db = $this->getDb();
-        return $db->update($where, $update);
+        return $db->update($where, $update, $limit);
+    }
+
+    public function del($where, $limit=1) {
+        $db = $this->getDb();
+        return $db->del($where, $limit);
     }
 
     /**
