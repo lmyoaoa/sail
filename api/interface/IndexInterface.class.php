@@ -15,5 +15,10 @@ class IndexInterface {
         ));
         print_r($rows);
         */
+
+        $id = $mod->add(array(
+            'name'=>'a'
+        ), true);
+        var_dump('新增的ID为：' . $id);
     }
 }

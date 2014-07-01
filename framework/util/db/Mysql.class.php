@@ -45,6 +45,23 @@ class Mysql {
     }
 
     /**
+     * 往数据表插入一条记录
+     * @param array $array 插入数据库的数组，array( '字段名'=>'值' )
+     * @param bool $returnID 是否返回自增主键值
+     */
+    public function add($array, $returnID=false) {
+        $conn = $this->getConnect();
+        $data = $this->_formatData($array);
+
+        $sql = 'insert into `' . $this->tableName . '` set ' . $data['str'];
+        $sth = $conn->prepare($sql);
+
+        $res = $sth->execute($data['data']);
+
+        return $returnID ? $conn->lastInsertId() : $res;
+    }
+
+    /**
      * 查询数据表
      * @param string $fields
      * @param array $where 查询条件数组
@@ -220,5 +237,21 @@ class Mysql {
      */
     public function setResultMode($mode) {
         $this->resultMode = $mode;
+    }
+
+    /**
+     * 将数组格式化为逗号隔开的字符串
+     */
+    protected function _formatData($array) {
+        foreach( $array as $k => $v ) {
+            $key = ':' . $k;
+            $ret[] = $k . '=' . $key;
+            $val[$key] = $v;
+        }
+
+        return array(
+            'str'   =>implode(',', $ret),
+            'data'  =>$val,
+        );
     }
 }

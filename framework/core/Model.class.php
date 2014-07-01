@@ -28,6 +28,11 @@ abstract class Model {
         $this->sdb = new Mysql($this->SlaveConf, $this->dbName, $this->tableName);
     }
 
+    public function add($array, $returnID=false) {
+        $db = $this->getDb();
+        return $db->add($array, $returnID);
+    }
+
     /**
      * 查询数据表
      * @param string $fields
@@ -57,6 +62,9 @@ abstract class Model {
         return $db->getRowsCount($where, $formatData);
     }
 
+    /**
+     * 获取当前表字段
+     */
     public function getFields() {
         $db = $this->getDb();
         return $db->getFields();
