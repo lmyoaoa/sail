@@ -33,6 +33,11 @@ abstract class Model {
         return $db->add($array, $returnID);
     }
 
+    public function update( $where, $update ) {
+        $db = $this->getDb();
+        return $db->update($where, $update);
+    }
+
     /**
      * 查询数据表
      * @param string $fields

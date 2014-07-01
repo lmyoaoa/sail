@@ -48,17 +48,65 @@ class Mysql {
      * 往数据表插入一条记录
      * @param array $array 插入数据库的数组，array( '字段名'=>'值' )
      * @param bool $returnID 是否返回自增主键值
+     * @return bool | id
      */
     public function add($array, $returnID=false) {
         $conn = $this->getConnect();
-        $data = $this->_formatData($array);
+        $data = $this->_formatValue($array);
 
         $sql = 'insert into `' . $this->tableName . '` set ' . $data['str'];
         $sth = $conn->prepare($sql);
-
         $res = $sth->execute($data['data']);
 
         return $returnID ? $conn->lastInsertId() : $res;
+    }
+
+    /**
+     * 更新数据库数据，不支持库更新
+     * @param array $where 查询数组，与getRows等函数用法相同
+     * @param array $update 更新的数组 array('字段名'=>'值', )
+     * @param int rray $limit 限制操作条数
+     * @return bool
+     */
+    public function update(array $where, array $update, $limit=1) {
+        /*
+        if( empty($where) || empty($update) ) {
+            throw new BaseException('不允许对全库进行更新，或者更新内容为空'); return false;
+        }
+        */
+
+        //更新
+        $conn = $this->getConnect();
+        $value = $this->_formatValue($update, true);
+        $formatData = $this->formatWhere($where);
+        //$data = array_merge($value['data'], $formatData['data']);
+
+        $sql = 'update ' . $this->tableName . ' set ' . $value['str'] . ' where ' . $formatData['where'] 
+                . ' limit ' . $limit;
+        $sth = $conn->prepare($sql);
+        return $sth->execute($formatData['data']);
+    }
+
+    /**
+     * 对数据进行物理删除，一般不对数据进行物理删除，任何数据都是宝贵的...
+     * @param array $where
+     * @param int $limit 限制操作条数
+     * @return bool
+     */
+    public function del(array $where, $limit=1) {
+        /*
+        if( empty($where) || empty($update) ) {
+            throw new BaseException('不允许对全库进行删除操作'); return false;
+        }
+        */
+
+        //更新
+        $conn = $this->getConnect();
+        $formatData = $this->formatWhere($where);
+
+        $sql = 'delete from ' . $this->tableName . ' where ' . $formatData['where'] . ' limit ' . $limit;
+        $sth = $conn->prepare($sql);
+        return $sth->execute($formatData['data']);
     }
 
     /**
@@ -117,6 +165,64 @@ class Mysql {
         $count = $sth->fetch( $this->resultMode );
 
         return $count ? $count['n'] : 0;
+    }
+
+    /**
+     * 直接执行sql语句，一般情况下请勿使用
+     * @param string $sql
+     */
+    public function query($sql) {
+        $conn = $this->getConnect();
+        $cq = $conn->query($sql);
+        //$cq->setFetchMode(PDO::FETCH_ASSOC);
+        $rows = $cq->fetchAll( $this->resultMode );
+        return $rows;
+    }
+
+    /**
+     * 获取数据库字段
+     */
+    public function getFields($table='') {
+        $table = $table ? $table : $this->tableName;
+        $conn = $this->getConnect();
+        $cq = $conn->query("DESCRIBE $table");
+        $result = $cq->fetchAll( $this->resultMode );
+        unset($cq);
+        return $result;
+    }
+
+    /**
+     * 获得数据库连接
+     */
+    public function getConnect() {
+        if( $this->_conn ) {
+            return $this->_conn;
+        }
+        return $this->connect();
+    }
+    
+    /**
+     * 连接数据库
+     */
+    private function connect() {
+        try {
+            $this->_pcon = array(PDO::ATTR_PERSISTENT => $this->pconnect);
+            $this->_conn = new PDO("mysql:host={$this->host};port={$this->port};dbname={$this->dbName};", 
+                $this->dbUser,
+                $this->dbPasswd);
+            return $this->_conn;
+        }catch( Exception $e ) {
+            echo $e->getMessage();
+        }
+        return false;
+    }
+
+    /***
+     * 设置数据模式
+     * $this->setResultMode(PDO::FETCH_UNIQUE);
+     */
+    public function setResultMode($mode) {
+        $this->resultMode = $mode;
     }
 
     /**
@@ -182,73 +288,22 @@ class Mysql {
     }
 
     /**
-     * 直接执行sql语句，一般情况下请勿使用
-     * @param string $sql
-     */
-    public function query($sql) {
-        $conn = $this->getConnect();
-        $cq = $conn->query($sql);
-        //$cq->setFetchMode(PDO::FETCH_ASSOC);
-        $rows = $cq->fetchAll( $this->resultMode );
-        return $rows;
-    }
-
-    /**
-     * 获取数据库字段
-     */
-    public function getFields($table='') {
-        $table = $table ? $table : $this->tableName;
-        $conn = $this->getConnect();
-        $cq = $conn->query("DESCRIBE $table");
-        $result = $cq->fetchAll( $this->resultMode );
-        unset($cq);
-        return $result;
-    }
-
-    /**
-     * 获得数据库连接
-     */
-    public function getConnect() {
-        if( $this->_conn ) {
-            return $this->_conn;
-        }
-        return $this->connect();
-    }
-    
-    /**
-     * 连接数据库
-     */
-    private function connect() {
-        try {
-            $this->_pcon = array(PDO::ATTR_PERSISTENT => $this->pconnect);
-            $this->_conn = new PDO("mysql:host={$this->host};port={$this->port};dbname={$this->dbName};", 
-                $this->dbUser,
-                $this->dbPasswd);
-            return $this->_conn;
-        }catch( Exception $e ) {
-            echo $e->getMessage();
-        }
-        return false;
-    }
-
-    /***
-     * 设置数据模式
-     * $this->setResultMode(PDO::FETCH_UNIQUE);
-     */
-    public function setResultMode($mode) {
-        $this->resultMode = $mode;
-    }
-
-    /**
      * 将数组格式化为逗号隔开的字符串
      */
-    protected function _formatData($array) {
-        foreach( $array as $k => $v ) {
-            $key = ':' . $k;
-            $ret[] = $k . '=' . $key;
-            $val[$key] = $v;
+    protected function _formatValue($array, $returnString=false) {
+        if( $returnString) {
+            foreach( $array as $k => $v ) {
+                $ret[] = $k . '=\'' . addslashes($v) . '\'';
+            }
+            $val = array();
+        }else{
+            foreach( $array as $k => $v ) {
+                $key = ':' . $k;
+                $ret[] = $k . '=' . $key;
+                $val[$key] = $v;
+            }
         }
-
+        
         return array(
             'str'   =>implode(',', $ret),
             'data'  =>$val,
