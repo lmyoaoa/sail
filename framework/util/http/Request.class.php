@@ -70,15 +70,23 @@ class Request {
         return !$isHTML ? strip_tags(trim($string)) : trim($string);
     }
 
+    private static function _htmlspecialchars($string, $isHTML=false) {
+        return !$isHTML ? htmlspecialchars(trim($string)) : trim($string);
+    }
+
     /**
      * 获取POST中的数据
      * @param $key				POST中的key
+     * @param string $key       值类型，当设置为int时，值将格式化为数字
      * @param $default			如果数据不存在，默认返回的值。默认情况下为空
      * @return string
      */
-    public static function getPost($key, $default = '') {
+    public static function getPost($key, $default = '', $type='', $isHTML=false) {
         if (array_key_exists($key, $_POST)) {
-            return $_POST[$key];
+            if( $type == 'int' ) {
+                return intval($_POST[$key]);
+            }
+            return self::_htmlspecialchars($_POST[$key], $isHTML);
         }
         return $default;
     }
@@ -86,12 +94,16 @@ class Request {
     /**
      * 获取GET中的数据
      * @param $key				GET中的key
+     * @param string $key       值类型，当设置为int时，值将格式化为数字
      * @param $default			如果数据不存在，默认返回的值。默认情况下为空
      * @return string
      */
-    public static function getGet($key, $default = '') {
+    public static function getGet($key, $default = '', $type='' $isHTML=false) {
         if (array_key_exists($key, $_GET)) {
-            return $_GET[$key];
+            if( $type == 'int' ) {
+                return intval($_POST[$key]);
+            }
+            return self::_htmlspecialchars($_GET[$key], $isHTML);
         }
         return $default;
     }
@@ -99,13 +111,16 @@ class Request {
     /**
      * 获取REQUEST中的数据
      * @param $key				REQUEST中的key
-     * @param $default			如果数据不存在，默认返回的值。默认情况下为false
+     * @param $default			如果数据不存在，默认返回的值。默认情况下为空
      * @param $isHTML          返回的结果中是否允许html标签，默认为false
      * @return string
      * */
-    public static function getREQUEST($key, $default = false, $isHTML = false) {
+    public static function getRequest($key, $default = '', $type='', $isHTML = false) {
         if (array_key_exists($key, $_REQUEST)) {
-            return self::_stripTags($_REQUEST[$key], $isHTML);
+            if( $type == 'int' ) {
+                return intval($_POST[$key]);
+            }
+            return self::_htmlspecialchars($_REQUEST[$key], $isHTML);
         }
         return $default;
     }
@@ -113,12 +128,15 @@ class Request {
 	
 	/// 获取COOKIE中的数据
 	/// @param $key             COOKIE中的key
-	/// @param $default         如果数据不存在，默认返回的值。默认情况下为false
+	/// @param $default         如果数据不存在，默认返回的值。默认情况下为空
 	/// @param $isHTML          返回的结果中是否允许html标签，默认为false
 	/// @return string
-	public static function getCOOKIE($key, $default = false, $isHTML = false) {
+	public static function getCookie($key, $default = '', $type='', $isHTML = false) {
 		if (isset ($_COOKIE[$key])) {
-            return self::_stripTags($_COOKIE[$key], $isHTML);
+            if( $type == 'int' ) {
+                return intval($_POST[$key]);
+            }
+            return self::_htmlspecialchars($_COOKIE[$key], $isHTML);
 		}
 		return $default;
 	}

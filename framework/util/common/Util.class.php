@@ -1,6 +1,6 @@
 <?php
 /**
- * 工具类
+ * 工具类，纯功能的函数，放这里，含一些逻辑的代码，放到Helper助手类中
  */
 
 class Util {
@@ -11,7 +11,7 @@ class Util {
      */
     public static function isLogin() {
         /*获取登录用户信息*/
-        if( $_COOKIE['_ido_uid'] ) {
+        if( Request::getCookie('_ido_uid', 0, 'int') ) {
             return true;
         }
         return false;
@@ -32,5 +32,12 @@ class Util {
         header("Location: {$url}");
     }
 
+    /**
+     * 格式化输出
+     * @param string $string 要输出的字符串
+     */
+    public static function e($string) {
+        echo htmlspecialchars($string);
+    }
     
 }
