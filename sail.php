@@ -47,7 +47,8 @@ define('STATIC_PATH', ROOT_PATH . 'static/');
 //文件缓存路径
 define('CACHE_PATH', ROOT_PATH . 'cache/');
 
-require FRAMEWORK_PATH . 'util/common/Autoload.class.php';
+//require FRAMEWORK_PATH . 'util/common/Autoload.class.php';
+require FRAMEWORK_PATH . 'core/Sail.class.php';
 
 header('content-Type: text/html; charset=utf-8');
 
