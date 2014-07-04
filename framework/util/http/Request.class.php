@@ -98,10 +98,10 @@ class Request {
      * @param $default			如果数据不存在，默认返回的值。默认情况下为空
      * @return string
      */
-    public static function getGet($key, $default = '', $type='' $isHTML=false) {
+    public static function getGet($key, $default = '', $type='', $isHTML=false) {
         if (array_key_exists($key, $_GET)) {
             if( $type == 'int' ) {
-                return intval($_POST[$key]);
+                return intval($_GET[$key]);
             }
             return self::_htmlspecialchars($_GET[$key], $isHTML);
         }
@@ -118,7 +118,7 @@ class Request {
     public static function getRequest($key, $default = '', $type='', $isHTML = false) {
         if (array_key_exists($key, $_REQUEST)) {
             if( $type == 'int' ) {
-                return intval($_POST[$key]);
+                return intval($_REQUEST[$key]);
             }
             return self::_htmlspecialchars($_REQUEST[$key], $isHTML);
         }
@@ -134,7 +134,7 @@ class Request {
 	public static function getCookie($key, $default = '', $type='', $isHTML = false) {
 		if (isset ($_COOKIE[$key])) {
             if( $type == 'int' ) {
-                return intval($_POST[$key]);
+                return intval($_COOKIE[$key]);
             }
             return self::_htmlspecialchars($_COOKIE[$key], $isHTML);
 		}
