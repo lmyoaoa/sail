@@ -135,6 +135,7 @@ class Mysql {
         $sth = $conn->prepare('SELECT ' . $fields . ' FROM ' . $this->tableName . $where 
             . ' ' . $orderBy . ' limit ' . $start . ','.$size );
         //var_dump($sth);
+        //print_r($formatData['data']);
         $res = $sth->execute($formatData['data']);
         $result = $sth->fetchAll( $this->resultMode );
 
@@ -288,19 +289,19 @@ class Mysql {
                         $formatData['data'][$key] = $v[2];
                         break;
                     case 'in':
-                        /*
                         $quot = isset($v[3]) && $v[3] ? "'" : '';
                         foreach( $v[2] as $val ) {
                             $in[] = $quot . $val . $quot;
                         }
-                        $formatData['where'][] = $v[0] . ' in (' . implode($in) . ')';
-                        */
+                        $formatData['where'][] = $v[0] . ' in (' . implode(',', $in) . ')';
+                        /*
                         $quot = isset($v[3]) && $v[3] ? "'" : '';
                         foreach( $v[2] as $val ) {
                             $in[] = $quot . $val . $quot;
                         }
                         $formatData['data'][$key] = implode(',', $in);
                         $formatData['where'][] = $v[0] . ' in (' . $key . ')';
+                        */
                         break;
                     case 'between':
                         $formatData['data'][$key . '_start']    = $v[2][0];
