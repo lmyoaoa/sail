@@ -30,7 +30,7 @@ class Router {
      * @author limingyou
      */
     public static function setParams() {
-        $uri = self::$_URI = $_GET['_ac'] ? rtrim($_GET['_ac'], '/') : '';
+        $uri = self::$_URI = isset($_GET['_ac'])&& $_GET['_ac'] ? rtrim($_GET['_ac'], '/') : '';
         $cParams = self::parseRoute();
         $cParams['get'] = $_GET;
         $cParams['post'] = $_POST;

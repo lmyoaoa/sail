@@ -125,7 +125,8 @@ class Mysql {
        @param int $size
        @param string $orderBy etc: 'order by id desc'
      */
-    public function getRows($fields='*', $where=array(), $page=1, $size=10, $orderBy='', $isCount=true) {
+    public function getRows($fields='', $where=array(), $page=1, $size=10, $orderBy='', $isCount=false) {
+        $fields = $fields=='' ? '*' : $fields;
         $formatData = $this->formatWhere($where);
         $where = $formatData['where']=='' ? '' : ' where ' . $formatData['where'];
         $start = ($page -1) * $size;
@@ -222,9 +223,12 @@ class Mysql {
      */
     public function getConnect() {
         if( $this->_conn ) {
+            //$this->_conn->query('SET NAMES UTF8');
             return $this->_conn;
         }
-        return $this->connect();
+        $conn = $this->connect();
+        $conn->query('SET NAMES UTF8');
+        return $conn;
     }
     
     /**
@@ -277,7 +281,7 @@ class Mysql {
         foreach( $array as $k => $v ) {
             $preBra = $endBra = '';
             $key = ':' . $v[0];
-            if( is_array($v) && !empty($v[2]) ) {
+            if( is_array($v) && $v[2] !== '' ) {
                 switch( $v[1] ) {
                     case '=':
                         $formatData['where'][] = $v[0] . $v[1] . $key;
@@ -295,7 +299,7 @@ class Mysql {
                         foreach( $v[2] as $val ) {
                             $in[] = $quot . $val . $quot;
                         }
-                        $formatData['data'][$key] = implode($in);
+                        $formatData['data'][$key] = implode(',', $in);
                         $formatData['where'][] = $v[0] . ' in (' . $key . ')';
                         break;
                     case 'between':
@@ -309,6 +313,7 @@ class Mysql {
             }
         }
 
+        //print_r($formatData);
         $formatData['where'] = implode(' and ', $formatData['where']);
         return $formatData;
     }
