@@ -13,7 +13,7 @@ class Controller {
     protected $view;
 
     //模板目录
-    protected $tplPath;
+    protected $tplPath = '';
 
     public function __construct() {
         $this->view = new View();
@@ -34,6 +34,7 @@ class Controller {
      */
     protected function fetch($tplName, $value=array()) {
         $tplFile = $this->getTplFile($tplName);
+        $value['tplPath'] = $this->tplPath;
         return $this->view->fetch($tplFile, $value);
     }
 
@@ -43,14 +44,15 @@ class Controller {
      */
     protected function render($tplName, $value) {
         $tplFile = $this->getTplFile($tplName);
+        $value['tplPath'] = $this->tplPath;
         $this->view->display($tplFile, $value);
     }
 
     protected function getTplFile($tplName) {
         $cParams = $this->cVars;
         $module = $cParams['module'] ? $cParams['module'] . '/' : '';
-        return ROOT_PATH . 'templates/' . 
-            $cParams['app'] . '/' . $module . $tplName;
+        $this->tplPath = ROOT_PATH . 'templates/' .  $cParams['app'] . '/' . $module;
+        return $this->tplPath . $tplName;
     }
 
 }

@@ -51,20 +51,34 @@ class Request {
         return $pageURL;
     }
 
+    /**
+     * 本页的URL，可用于登录返回用等
+     * @param bool $isQuery 是否获取参数
+     * @return string
+     */
+    public static function thisPageUrl($isQuery=true) {
+        if($isQuery && $_SERVER['QUERY_STRING']) {
+            $return_url = urlencode($_SERVER['SCRIPT_URI'].'?'.$_SERVER['QUERY_STRING']);
+        }else{
+            $return_url = urlencode($_SERVER['SCRIPT_URI']);
+        }
+
+        return $return_url;
+    }
+
     private static function _stripTags($string, $isHTML=false) {
-        return !$isHTML ? strip_tags($string) : $string;
+        return !$isHTML ? strip_tags(trim($string)) : trim($string);
     }
 
     /**
      * 获取POST中的数据
      * @param $key				POST中的key
-     * @param $default			如果数据不存在，默认返回的值。默认情况下为false
-	 * @param $isHTML           返回的结果中是否允许html标签，默认为false
+     * @param $default			如果数据不存在，默认返回的值。默认情况下为空
      * @return string
      */
-    public static function getPOST($key, $default = false, $isHTML= false) {
+    public static function getPost($key, $default = '') {
         if (array_key_exists($key, $_POST)) {
-            return self::_stripTags($_POST[$key], $isHTML);
+            return $_POST[$key];
         }
         return $default;
     }
@@ -72,16 +86,12 @@ class Request {
     /**
      * 获取GET中的数据
      * @param $key				GET中的key
-     * @param $default			如果数据不存在，默认返回的值。默认情况下为false
-	 * @param $isHTML          返回的结果中是否允许html标签，默认为false
+     * @param $default			如果数据不存在，默认返回的值。默认情况下为空
      * @return string
      */
-    public static function getGET($key='', $default = false, $isHTML = false) {
-        if( $key == '' ) {
-            return self::_stripTags($_GET[$key], $isHTML);
-        }
+    public static function getGet($key, $default = '') {
         if (array_key_exists($key, $_GET)) {
-            return self::_stripTags($_GET[$key], $isHTML);
+            return $_GET[$key];
         }
         return $default;
     }

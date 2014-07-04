@@ -8,7 +8,7 @@
  */
 
 class appConfig {
-    //项目代号，项目名
+    //项目代号，项目名，此定义名意义在1：定义项目名 2：定义controller/model/templates路径
     const APP_NAME = 'app';
 
     //项目默认页
@@ -21,5 +21,12 @@ class appConfig {
     const DEFAULT_ROUTE_RULE = TRUE;
 
     //public static $otherConf = array('xxoo', 'xx', 'oo');
+
+    //项目内自动加载类
+    public static function getAutoloadClass() {
+        return array(
+            'IndexBasePage'     => ROOT_PATH . 'app/controller/IndexBasePage.class.php',
+        );
+    }
 
 }

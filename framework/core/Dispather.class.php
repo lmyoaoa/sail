@@ -31,6 +31,10 @@ class Dispather {
         $controllerName = $cParams['controller'] . self::CLASS_EXT;
         $c = new $controllerName();
 
+        if ( method_exists($c, 'init') ) {
+            $c->init();
+        }
+
         $action = $cParams['action'] . 'Action';
         if ( !method_exists($c, $action) ) {
             exit('未找到对应action: ' . $action);

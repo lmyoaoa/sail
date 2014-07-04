@@ -37,13 +37,14 @@ class Sail {
     public static function appInit() {
         $appConfFile = APP_CONF_PATH . APP_NAME . self::CONF_EXT;
         if( !file_exists($appConfFile) ) {
-            throw new BaseException('没有找到' . $appConfFile);
+            throw new BaseException('没有找到' . $appConfFile . ' 项目配置文件');
         }
         $routeConfFile = ROUTE_PATH . APP_NAME . self::ROUTES_EXT;
         if( !file_exists($routeConfFile) ) {
-            throw new BaseException('没有找到' . $routeConfFile);
+            throw new BaseException('没有找到' . $routeConfFile . ' 路由配置文件');
         }
         require $appConfFile;
+        require FRAMEWORK_PATH . 'util/common/Autoload.class.php';
         require $routeConfFile;
     }
 

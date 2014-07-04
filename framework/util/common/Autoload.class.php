@@ -5,8 +5,6 @@
 	日期：2012-06-01
 *********/
 
-//set_include_path ( LIB_PATH . get_include_path());
-
 class Autoloader {
 
 	protected static $classes = null;
@@ -14,6 +12,10 @@ class Autoloader {
 	protected static function classArray() {
 		if( is_null(self::$classes) || !is_array(self::$classes) ) {
 			self::$classes = require COMMON_PATH . '/autoload.conf.php';
+            $appClassList = appConfig::getAutoloadClass();
+            if( !empty($appClassList) ) {
+                self::$classes = array_merge(self::$classes, $appClassList);
+            }
 		}
 	}
 

@@ -168,6 +168,32 @@ class Mysql {
     }
 
     /**
+     * 查询数据表，一条记录
+     * @param string $fields
+     * @param array $where 查询条件数组
+     * array(
+            array('name', '=', 'lmyoaoa'),
+            array('number', '>', 15),
+            array('id', 'in', array(1,2,3), false),     //此处false/0代表是否给数组加上单引号
+            array('id', 'between', ''),
+
+            'xxx=0 and oo=9 or jj=3' //自定义sql
+       )
+       @param string $orderBy etc: 'order by id desc'
+     */
+    public function getOne($fields='*', $where=array(), $orderBy='') {
+        $formatData = $this->formatWhere($where);
+        $where = $formatData['where']=='' ? '' : ' where ' . $formatData['where'];
+
+        $conn = $this->getConnect();
+        $sth = $conn->prepare('SELECT ' . $fields . ' FROM ' . $this->tableName . $where 
+            . ' ' . $orderBy);
+        $res = $sth->execute($formatData['data']);
+        $result = $sth->fetch( $this->resultMode );
+        return $result;
+    }
+
+    /**
      * 直接执行sql语句，一般情况下请勿使用
      * @param string $sql
      */

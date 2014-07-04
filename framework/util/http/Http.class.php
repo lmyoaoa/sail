@@ -31,9 +31,9 @@ class Http {
             curl_setopt($ch, CURLOPT_TIMEOUT, 25); // 超时时间
             curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);//HTTP请求User-Agent:头
             curl_setopt($ch,CURLOPT_HTTPHEADER, array(
-            'Accept-Language: zh-cn',
-            'Connection: Keep-Alive',
-            'Cache-Control: no-cache'
+                'Accept-Language: zh-cn',
+                'Connection: Keep-Alive',
+                'Cache-Control: no-cache'
             ));//设置HTTP头信息
             $document = curl_exec($ch); //执行预定义的CURL
             $info=curl_getinfo($ch); //得到返回信息的特性
