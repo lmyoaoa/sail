@@ -1,7 +1,7 @@
 sail框架
 ====
 
-一个php framework，一个简单，高效的php框架
+天下武功，唯快不破，这是一个php framework，一个简单，高效的php框架。
 
 
 项目简介
