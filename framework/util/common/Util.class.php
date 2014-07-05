@@ -40,4 +40,27 @@ class Util {
         echo htmlspecialchars($string);
     }
     
+    public static function weekDay( $n ) {
+        $array = array('1'=>'一', '二', '三', '四', '五', '六', '日',);
+        return $array[$n];
+    }
+
+    /**
+    传入大写的汉字
+    **/
+    public static function weekConfig( $n ) {
+        $array = array( 
+            '一'=>'月',
+            '二'=>'火',
+            '三'=>'水',
+            '四'=>'木',
+            '五'=>'金',
+            '六'=>'土',
+            '日'=>'日',
+        );
+        //日曜日
+        return $array[$n];
+    }
+
+
 }

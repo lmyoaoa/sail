@@ -292,6 +292,16 @@ class Mysql {
                         $formatData['where'][] = $v[0] . $v[1] . $key;
                         $formatData['data'][$key] = $v[2];
                         break;
+                    case '>=':
+                        $key1 = $key . '_s';
+                        $formatData['where'][] = $v[0] . $v[1] . $key1;
+                        $formatData['data'][$key1] = $v[2];
+                        break;
+                    case '<=':
+                        $key1 = $key . '_e';
+                        $formatData['where'][] = $v[0] . $v[1] . $key1;
+                        $formatData['data'][$key1] = $v[2];
+                        break;
                     case 'in':
                         $quot = isset($v[3]) && $v[3] ? "'" : '';
                         foreach( $v[2] as $val ) {
