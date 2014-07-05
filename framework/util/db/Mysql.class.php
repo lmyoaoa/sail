@@ -57,6 +57,7 @@ class Mysql {
         $sql = 'insert into `' . $this->tableName . '` set ' . $data['str'];
         $sth = $conn->prepare($sql);
         $res = $sth->execute($data['data']);
+        //$arr = $sth->errorInfo(); print_r($arr);
 
         return $returnID ? $conn->lastInsertId() : $res;
     }
@@ -183,14 +184,17 @@ class Mysql {
        )
        @param string $orderBy etc: 'order by id desc'
      */
-    public function getOne($fields='*', $where=array(), $orderBy='') {
+    public function getOne($fields='', $where=array(), $orderBy='') {
+        $fields = $fields=='' ? '*' : $fields;
         $formatData = $this->formatWhere($where);
         $where = $formatData['where']=='' ? '' : ' where ' . $formatData['where'];
 
         $conn = $this->getConnect();
         $sth = $conn->prepare('SELECT ' . $fields . ' FROM ' . $this->tableName . $where 
             . ' ' . $orderBy);
+        //var_dump($sth);
         $res = $sth->execute($formatData['data']);
+        //$arr = $sth->errorInfo(); print_r($arr);
         $result = $sth->fetch( $this->resultMode );
         return $result;
     }

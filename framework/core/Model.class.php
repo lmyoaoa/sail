@@ -61,7 +61,7 @@ abstract class Model {
      */
     public function getRows($fields='*', $where=array(), $page=1, $size=10, $orderBy='') {
         $db = $this->getDb();
-        return $db->getRows($fields='*', $where, $page, $size, $orderBy);
+        return $db->getRows($fields, $where, $page, $size, $orderBy);
     }
 
     /**
@@ -80,7 +80,7 @@ abstract class Model {
      */
     public function getOne($fields='*', $where=array(), $orderBy='') {
         $db = $this->getDb();
-        return $db->getOne($fields='*', $where, $orderBy);
+        return $db->getOne($fields, $where, $orderBy);
     }
 
 
