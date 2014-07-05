@@ -9,11 +9,7 @@ class MysqlConf {
 
     //库名
     const MASTER = 'test';
-    const SLAVE = 'oboro';
-
-    //ichaichai.com主从库
-    const CC_MASTER = 'whatido';
-    const CC_SLAVE  = 'whatido';
+    const SLAVE = 'test';
 
     /**
      * 主库配置

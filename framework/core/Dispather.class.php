@@ -56,7 +56,7 @@ class Dispather {
      * @author limingyou
      */
     private static function _controllerPath($cParams) {
-        return $cParams['app'] . '/controller/' . $cParams['module'] . $cParams['controller'] . self::EXT;
+        return ROOT_PATH . $cParams['app'] . '/controller/' . $cParams['module'] . $cParams['controller'] . self::EXT;
     }
 
     private static function _checkCParams(&$cParams) {
@@ -67,7 +67,7 @@ class Dispather {
             $cParams['module'] = ''; // xxoo/
         }
         if( !isset($cParams['controller']) || ( isset($cParams['controller']) && empty($cParams['controller']) ) ) {
-            $cParams['controller'] = 'Index';
+            $cParams['controller'] = 'index';
         }
         if( !isset($cParams['action']) || ( isset($cParams['action']) && empty($cParams['action']) ) ) {
             $cParams['action'] = 'run';

@@ -12,7 +12,7 @@ class appConfig {
     const APP_NAME = 'app';
 
     //项目默认页
-    const DEF_CONTROLLER = 'Index';
+    const DEF_CONTROLLER = 'index';
 
     //404页面
     const PAGE_NOT_FOUND = '/404.html';
@@ -21,6 +21,7 @@ class appConfig {
     const DEFAULT_ROUTE_RULE = TRUE;
 
     //public static $otherConf = array('xxoo', 'xx', 'oo');
+    public static $tagColor = array('#99CC66', '#FF9999', '#336666', '#FF9933');
 
     //项目内自动加载类
     public static function getAutoloadClass() {

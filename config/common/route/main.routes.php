@@ -20,7 +20,7 @@
 //hello world测试页
 Router::get('sail', array(
     'm'=>'',
-    'c'=>'Index',
+    'c'=>'index',
     'a'=>'index',
     'args'=>array(),
 ));
