@@ -16,11 +16,18 @@ if( !defined('APP_NAME') ) {
 //程序主目录
 define('ROOT_PATH', dirname(__FILE__) . '/');
 
-//是否测试环境
-define('DEBUG', true);
+//时区设置
+date_default_timezone_set('PRC');
 
 //公共配置路径
 define('COMMON_PATH', ROOT_PATH . 'config/common/');
+
+//加载环境配置
+if( file_exists(COMMON_PATH . 'anc.php') ) {
+    require COMMON_PATH . 'anc.php';
+}else{
+    exit('config/common目录下没有找到anc.php锚文件，请重命名anc.sample.php文件使用');
+}
 
 //路由配置目录
 define('ROUTE_PATH', COMMON_PATH . 'route/');
@@ -47,7 +54,8 @@ define('STATIC_PATH', ROOT_PATH . 'static/');
 //文件缓存路径
 define('CACHE_PATH', ROOT_PATH . 'cache/');
 
-//require FRAMEWORK_PATH . 'util/common/Autoload.class.php';
+//加载全局配置，核心类文件
+require CONF_PATH . 'global.php';
 require FRAMEWORK_PATH . 'core/Sail.class.php';
 
 header('content-Type: text/html; charset=utf-8');
