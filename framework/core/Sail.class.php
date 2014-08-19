@@ -17,6 +17,7 @@ class Sail {
      * 引导程序
      */
     public static function run() {
+        require FRAMEWORK_PATH . 'core/BaseException.class.php';
         try {
             self::appInit();
             $cParams = Router::getParams();

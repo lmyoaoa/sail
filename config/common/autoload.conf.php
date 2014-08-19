@@ -12,7 +12,7 @@ return array(
 	'Sail'              => FRAMEWORK_PATH . 'core/Sail.class.php',
 	'Router'            => FRAMEWORK_PATH . 'core/Router.class.php',
 	'Dispather'         => FRAMEWORK_PATH . 'core/Dispather.class.php',
-	'BaseException'     => FRAMEWORK_PATH . 'core/BaseException.class.php',
+	//'BaseException'     => FRAMEWORK_PATH . 'core/BaseException.class.php',
 	'Controller'        => FRAMEWORK_PATH . 'core/Controller.class.php',
 	'View'              => FRAMEWORK_PATH . 'core/View.class.php',
 	'Model'             => FRAMEWORK_PATH . 'core/Model.class.php',
