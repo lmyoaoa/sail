@@ -4,7 +4,7 @@
  * 2014-07-10
  */
 
-define('WWW_URL', 'http://www.ichaichai.com');
-define('SITE_YUMING', 'ichaichai.com');
+//define('WWW_URL', 'http://www.ichaichai.com');
+//define('SITE_YUMING', 'ichaichai.com');
 
 
