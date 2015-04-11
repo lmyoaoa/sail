@@ -15,7 +15,7 @@ class Http {
             $postdata post数据
             $proxy 代理地址 (无需
 	**********/
-	public static function post($url, $postdata, $proxy="") {
+    public static function post($url, $postdata, $proxy="") {
         try {
             $proxy=trim($proxy);
             $user_agent ="Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
@@ -43,7 +43,7 @@ class Http {
         } catch (Exception $e) {
             return false;
         }
-	}
+    }
 
 	/***
 	功能：获取内容
