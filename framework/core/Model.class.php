@@ -59,9 +59,9 @@ abstract class Model {
        @param int $size
        @param string $orderBy etc: 'order by id desc'
      */
-    public function getRows($fields='*', $where=array(), $page=1, $size=10, $orderBy='') {
+    public function getRows($fields='*', $where=array(), $page=1, $size=10, $orderBy='', $isCount=false) {
         $db = $this->getDb();
-        return $db->getRows($fields, $where, $page, $size, $orderBy);
+        return $db->getRows($fields, $where, $page, $size, $orderBy, $isCount);
     }
 
     /**
