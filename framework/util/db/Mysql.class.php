@@ -29,6 +29,9 @@ class Mysql {
 
     protected $_pcon;
 
+    //错误信息
+    protected $errorMsg;
+
     /**
      * 数据库初始化
      * @param array $dbValues
@@ -57,7 +60,9 @@ class Mysql {
         $sql = 'insert into `' . $this->tableName . '` set ' . $data['str'];
         $sth = $conn->prepare($sql);
         $res = $sth->execute($data['data']);
-        //$arr = $sth->errorInfo(); print_r($arr);
+        if( !$res ) {
+            $this->errorMsg = $sth->errorInfo(); //print_r($arr);
+        }
 
         return $returnID ? $conn->lastInsertId() : $res;
     }
@@ -135,8 +140,8 @@ class Mysql {
         $conn = $this->getConnect();
         $sth = $conn->prepare('SELECT ' . $fields . ' FROM ' . $this->tableName . $where 
             . ' ' . $orderBy . ' limit ' . $start . ','.$size );
-        //var_dump($sth);
-        //print_r($formatData['data']);
+        #var_dump($sth);
+        #print_r($formatData['data']);
         $res = $sth->execute($formatData['data']);
         $result = $sth->fetchAll( $this->resultMode );
 
@@ -296,6 +301,10 @@ class Mysql {
                 switch( $v[1] ) {
                     case '=':
                         $formatData['where'][] = $v[0] . $v[1] . $key;
+                        $formatData['data'][$key] = $v[2];
+                        break;
+                    case 'like':
+                        $formatData['where'][] = $v[0] . ' ' . $v[1] . ' ' . $key;
                         $formatData['data'][$key] = $v[2];
                         break;
                     case '>=':
