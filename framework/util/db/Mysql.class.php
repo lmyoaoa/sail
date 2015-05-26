@@ -299,6 +299,8 @@ class Mysql {
             $key = ':' . $v[0];
             if( is_array($v) && $v[2] !== '' ) {
                 switch( $v[1] ) {
+                    case '>':
+                    case '<':
                     case '=':
                         $formatData['where'][] = $v[0] . $v[1] . $key;
                         $formatData['data'][$key] = $v[2];
