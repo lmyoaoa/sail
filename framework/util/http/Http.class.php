@@ -50,15 +50,15 @@ class Http {
 	作者：limingyou
 	日期：2012-11-23
 	***/
-	public static function get($url, $referer='') {
+	public static function get($url, $referer='', $timeout=10) {
 		$referer = $referer ? $referer : $url;
 		$curl=curl_init();
 		curl_setopt($curl,CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($curl,CURLOPT_REFERER,$referer);
 		curl_setopt($curl,CURLOPT_URL,$url);
 		#curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/20100101 Firefox/17.0");
-		curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)");
-		curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+		curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)");
+		curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
 		$con = curl_exec($curl);
 		curl_close($curl);
 		return $con;
