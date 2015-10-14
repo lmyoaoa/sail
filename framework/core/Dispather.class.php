@@ -56,7 +56,8 @@ class Dispather {
      * @author limingyou
      */
     private static function _controllerPath($cParams) {
-        return ROOT_PATH . $cParams['app'] . '/controller/' . $cParams['module'] . $cParams['controller'] . self::EXT;
+        $module = $cParams['module'] ? $cParams['module'] . '/' : '';
+        return ROOT_PATH . $cParams['app'] . '/controller/' . $module . $cParams['controller'] . self::EXT;
     }
 
     private static function _checkCParams(&$cParams) {

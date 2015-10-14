@@ -96,7 +96,7 @@ class Router {
                     return self::_setCParams($cParams, '', $defRule[0], $defRule[1], array());
                 }
                 if( $defRuleCount == 3 ) {
-                    return self::_setCParams($cParams, $defRule[0], $defRule[1], $defRule[1], array());
+                    return self::_setCParams($cParams, $defRule[0], $defRule[1], $defRule[2], array());
                 }
             }
 
@@ -111,8 +111,8 @@ class Router {
         return $cParams;
     }
 
-    private static function _setCParams(& $cParams, $model, $controller, $action, $args) {
-        $cParams['model'] = $model;
+    private static function _setCParams(& $cParams, $module, $controller, $action, $args) {
+        $cParams['module'] = $module;
         $cParams['controller'] = $controller;
         $cParams['action'] = $action;
         $cParams['args'] = $args;
