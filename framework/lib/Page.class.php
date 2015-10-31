@@ -35,6 +35,7 @@ class Page {
         'total' => 数据总条数
         'param' => 页面参数数组array('kk'=>1, 'nn'=>2)
         'url' => 需要跳转的分页地址，非必须
+        'wildCard' => 通配符，非必须，假如页面地址使用rewrite，则使用通配符，如'{{type}}-{{page}}.html', type为param的key
         'anc' => 锚点，非必须
      )
      </code>
@@ -49,6 +50,7 @@ class Page {
         $this->anc = isset($data['anc']) ? $data['anc'] : '';
         $this->url = isset($data['url']) ? $data['url'] : '';
         $this->maxPage = ceil($this->totalNum / $this->perPage);
+        $this->wildCard = isset($data['wildCard']) ? $data['wildCard'] : '';
     }
 
     /**
@@ -67,8 +69,17 @@ class Page {
             if ( strlen(trim($val)) > 0 ) {
                 $queryString[] = $key .'=' . $val;
             }
+
+            if( $this->wildCard != '') {
+                $this->wildCard = str_replace('{{' . $key . '}}', $val, $this->wildCard);
+            }
         }
-        $queryString = '/?' . implode('&', $queryString);
+        if( $this->wildCard != '') {
+            $queryString = $this->wildCard;
+        }else{
+            $queryString = '/?' . implode('&', $queryString);
+        }
+
         //$baseUrl = '/' . CONTROLLER_NAME . '/' . ACTION_NAME . '/';
         $baseUrl = $this->url;
         $url = $baseUrl . $queryString;
@@ -139,12 +150,17 @@ class Page {
      * @return array
      */
     protected function _pageData($url, $toPage, $isCurr=0) {
-        if( strpos($url, '?') === false ) {
-            $url = rtrim($url, '/') . '/'; 
-            $url = $url . "?page={$toPage}";
+        if( $this->wildCard == '' ) {
+            if( strpos($url, '?') === false ) {
+                $url = rtrim($url, '/') . '/'; 
+                $url = $url . "?page={$toPage}";
+            }else{
+                $url = $url . "&page={$toPage}";
+            }
         }else{
-            $url = $url . "&page={$toPage}";
+            $url = str_replace('{{page}}', $toPage, $this->wildCard);
         }
+
         return array(
             'curr' => $isCurr,
             'page' => $toPage,
@@ -167,12 +183,13 @@ class Page {
         }
 
         if ($str) {
-            $prevUrl = isset($data['neig']['prev']['url']) ? $data['neig']['prev']['url'] : '#';
-            $nextUrl = isset($data['neig']['next']['url']) ? $data['neig']['next']['url'] : '#';
+            $prevUrl = isset($data['neig']['prev']['url']) ? $data['neig']['prev']['url'] : 'javascript:;';
+            $nextUrl = isset($data['neig']['next']['url']) ? $data['neig']['next']['url'] : 'javascript:;';
             $strPrefix = '<ul class="pagination">';
             $strPrefix .= '<li class="prev disabled"><a href="' . $prevUrl . '">← 上一页</a></li>';
 
             $strSuffix = '<li class="next"><a href="' . $nextUrl . '">下一页 → </a></li>';
+            $strSuffix .= '<span style="float:left;line-height:34px;margin:0 5px 0 5px;">总共 ' . $data['totalNum'] . ' 条</span>';
             $strSuffix .= '</ul>';
 
             $str = $strPrefix . $str . $strSuffix;
