@@ -25,6 +25,7 @@ define('COMMON_PATH', ROOT_PATH . 'config/common/');
 //加载环境配置
 if( file_exists(COMMON_PATH . 'anc.php') ) {
     require COMMON_PATH . 'anc.php';
+    require COMMON_PATH . 'common.conf.php';
 }else{
     exit('config/common目录下没有找到anc.php锚文件，请重命名anc.sample.php文件使用');
 }
@@ -60,6 +61,11 @@ require FRAMEWORK_PATH . 'core/Sail.class.php';
 
 header('content-Type: text/html; charset=utf-8');
 
-Sail::run();
+//判断是否是命令行脚本
+if( defined('IS_CLI') && IS_CLI == true ) {
+    Sail::appInit();
+}else{
+    Sail::run();
+}
 
 #echo microtime(true) - TIME;
