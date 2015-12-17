@@ -24,6 +24,9 @@ class Mysql {
     protected $dbName;
     protected $tableName;
 
+    //
+    protected $lastSql;
+
     //pdo object
     protected $_conn;
 
@@ -212,8 +215,13 @@ class Mysql {
         $conn = $this->getConnect();
         $cq = $conn->query($sql);
         //$cq->setFetchMode(PDO::FETCH_ASSOC);
+        $this->lastSql = $sql;
         $rows = $cq->fetchAll( $this->resultMode );
         return $rows;
+    }
+
+    public function getLastSql() {
+        return $this->lastSql;
     }
 
     /**
@@ -323,17 +331,13 @@ class Mysql {
                     case 'in':
                         $quot = isset($v[3]) && $v[3] ? "'" : '';
                         foreach( $v[2] as $val ) {
+                            //默认判断是否是数字，非数字全部加上单引号
+                            if( !isset($v[3]) ) {
+                                $quot = !is_int($val) ? "'" : '';
+                            }
                             $in[] = $quot . $val . $quot;
                         }
                         $formatData['where'][] = $v[0] . ' in (' . implode(',', $in) . ')';
-                        /*
-                        $quot = isset($v[3]) && $v[3] ? "'" : '';
-                        foreach( $v[2] as $val ) {
-                            $in[] = $quot . $val . $quot;
-                        }
-                        $formatData['data'][$key] = implode(',', $in);
-                        $formatData['where'][] = $v[0] . ' in (' . $key . ')';
-                        */
                         break;
                     case 'between':
                         $formatData['data'][$key . '_start']    = $v[2][0];
