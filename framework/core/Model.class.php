@@ -33,6 +33,12 @@ abstract class Model {
         return $db->add($array, $returnID);
     }
 
+    /**
+     * @param array $update 更新的数组array(
+        '字段名' => 需要更新的值
+        '__str__' => 自定义语句，如count=count+1等
+     )
+     */
     public function update( $where, $update, $limit=1 ) {
         $db = $this->getDb();
         return $db->update($where, $update, $limit);

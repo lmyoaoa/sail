@@ -92,6 +92,8 @@ class Mysql {
 
         $sql = 'update ' . $this->tableName . ' set ' . $value['str'] . ' where ' . $formatData['where'] 
                 . ' limit ' . $limit;
+                echo $sql;
+                print_r($formatData['data']);
         $sth = $conn->prepare($sql);
         return $sth->execute($formatData['data']);
     }
@@ -361,7 +363,11 @@ class Mysql {
     protected function _formatValue($array, $returnString=false) {
         if( $returnString) {
             foreach( $array as $k => $v ) {
-                $ret[] = $k . '=\'' . addslashes($v) . '\'';
+                if($k == '__str__') {
+                    $ret[] = $v;
+                }else{
+                    $ret[] = $k . '=\'' . addslashes($v) . '\'';
+                }
             }
             $val = array();
         }else{
