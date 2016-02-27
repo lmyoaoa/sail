@@ -110,6 +110,14 @@ abstract class Model {
         return $master ? $this->mdb : $this->sdb;
     }
 
+    /**
+     * @desc 直接使用sql查询数据库，不推荐使用，当联表查询等复杂可以考虑使用，不做封装
+     */
+    public function query($sql) {
+        $db = $this->getDb();
+        return $db->query();
+    }
+
     //子类中需初始化
     abstract protected function _init();
 
