@@ -92,10 +92,13 @@ class Mysql {
 
         $sql = 'update ' . $this->tableName . ' set ' . $value['str'] . ' where ' . $formatData['where'] 
                 . ' limit ' . $limit;
-                echo $sql;
-                print_r($formatData['data']);
         $sth = $conn->prepare($sql);
-        return $sth->execute($formatData['data']);
+        $res = $sth->execute($formatData['data']);
+        if( !$res ) {
+            //$this->errorMsg = $sth->errorInfo(); print_r($this->errorMsg);
+        }
+
+        return $res;
     }
 
     /**
