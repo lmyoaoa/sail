@@ -217,11 +217,16 @@ class Mysql {
      * @param string $sql
      */
     public function query($sql) {
+        $rows = array();
         $conn = $this->getConnect();
         $cq = $conn->query($sql);
         //$cq->setFetchMode(PDO::FETCH_ASSOC);
         $this->lastSql = $sql;
-        $rows = $cq->fetchAll( $this->resultMode );
+        if( $cq ) {
+            $rows = $cq->fetchAll( $this->resultMode );
+        }else{
+            $arr = $conn->errorInfo(); print_r($arr);
+        }
         return $rows;
     }
 
@@ -334,6 +339,7 @@ class Mysql {
                         $formatData['data'][$key1] = $v[2];
                         break;
                     case 'in':
+                        $in = array();
                         $quot = isset($v[3]) && $v[3] ? "'" : '';
                         foreach( $v[2] as $val ) {
                             //默认判断是否是数字，非数字全部加上单引号
@@ -342,6 +348,7 @@ class Mysql {
                             }
                             $in[] = $quot . $val . $quot;
                         }
+                        
                         $formatData['where'][] = $v[0] . ' in (' . implode(',', $in) . ')';
                         break;
                     case 'between':
@@ -355,8 +362,10 @@ class Mysql {
             }
         }
 
-        //print_r($formatData);
-        $formatData['where'] = implode(' and ', $formatData['where']);
+        if( isset($formatData['where']) ) {
+            $formatData['where'] = implode(' and ', $formatData['where']);
+        }
+        
         return $formatData;
     }
 

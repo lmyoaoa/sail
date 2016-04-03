@@ -115,7 +115,7 @@ abstract class Model {
      */
     public function query($sql) {
         $db = $this->getDb();
-        return $db->query();
+        return $db->query($sql);
     }
 
     //子类中需初始化
