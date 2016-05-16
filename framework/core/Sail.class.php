@@ -10,6 +10,9 @@ class Sail {
     const CONF_EXT = '.conf.php';
     const ROUTES_EXT = '.routes.php';
 
+    //框架参数
+    private static $_PARAMS = array();
+
     //当前页面url
     private static $url = '';
 
@@ -21,6 +24,7 @@ class Sail {
         try {
             self::appInit();
             $cParams = Router::getParams();
+            self::$_PARAMS = $cParams;
             //print_r($cParams);
             //print_r(Router::getRoutes());
 
@@ -49,4 +53,10 @@ class Sail {
         require $routeConfFile;
     }
 
+    /**
+     * @desc 获得当前框架相关变量数组
+     */
+    public static function getParams() {
+        return self::$_PARAMS;
+    }
 }
