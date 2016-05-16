@@ -54,6 +54,20 @@ class Sail {
     }
 
     /**
+     * @desc 获得当前controller名
+     */
+    public static function getController() {
+        return self::$_PARAMS['controller'];
+    }
+
+    /**
+     * @desc 获得当前action名
+     */
+    public static function getAction() {
+        return self::$_PARAMS['action'];
+    }
+
+    /**
      * @desc 获得当前框架相关变量数组
      */
     public static function getParams() {
