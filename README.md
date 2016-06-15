@@ -16,6 +16,7 @@ sail框架
 
 目录说明
 ====
+        web:            所有的web入口文件都放在这里
         api:            所有的数据都从api中输入输出
             ├─interface 接口文件均放在这下面
             ├─model     与数据表一一对应
@@ -63,7 +64,7 @@ sail框架
             listen       8081;  #这个端口改成默认80
             server_name  dev.sail.com;  #配置访问url
             location / {
-                root   /usr/htdocs/sail;   #框架目录
+                root   /usr/htdocs/sail/web;   #框架目录
                 index  index.html index.htm index.php;
           
                 #将所有请求rewrite到index.php
@@ -75,7 +76,7 @@ sail框架
 
             error_page  404              /404.html;
             location ~ \.php$ {
-                root   /usr/htdocs/sail;
+                root   /usr/htdocs/sail/web;
                 fastcgi_pass    127.0.0.1:9000;
                 fastcgi_index index.php;
                 fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
