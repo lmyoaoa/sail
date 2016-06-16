@@ -339,6 +339,7 @@ class Mysql {
                         $formatData['data'][$key1] = $v[2];
                         break;
                     case 'in':
+                    case 'not in':
                         $in = array();
                         $quot = isset($v[3]) && $v[3] ? "'" : '';
                         foreach( $v[2] as $val ) {
@@ -349,7 +350,7 @@ class Mysql {
                             $in[] = $quot . $val . $quot;
                         }
                         
-                        $formatData['where'][] = $v[0] . ' in (' . implode(',', $in) . ')';
+                        $formatData['where'][] = $v[0] . ' ' . $v[1] . ' (' . implode(',', $in) . ')';
                         break;
                     case 'between':
                         $formatData['data'][$key . '_start']    = $v[2][0];
