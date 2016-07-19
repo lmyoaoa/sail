@@ -84,6 +84,28 @@ sail框架
             }
         }
 
+  3.2 apache: apache相关配置
+
+        #1. 打开httpd.conf，搜索AllowOverride，并设置为All
+        #2. 在httpd.conf末尾加上下面的代码段
+        NameVirtualHost *:80
+        <VirtualHost *:80>
+            ServerName test.yourdomain.com #这里配置你想要设置的域名
+            DocumentRoot /www/sail/web/ #这里指向到框架下的web目录
+        </VirtualHost>
+
+        #在sail/web目录下创建.htaccess文件，内容如下：
+        <IfModule mod_rewrite.c>
+        RewriteEngine on
+
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ index.php?_ac=$1 [QSA,PT,L]
+        </IfModule>
+
+        #做完以上事项后重启apache并做好host配置，即可访问
+        
+
 4. 默认的page controller放在app/controller/下，打开可以看到app/controller/下有indexPage.class.php文件。一般我们默认页面都使用index命名，当然在sail里面也可以换成其他的，在config/appConfig中的对应配置修改DEF_CONTROLLER常量。（本例中可通过修改main.conf.php文件实现）。
 
 5. 路由的配置：默认indexPage实现了一个index（首页），以及一个列表页，列表页通过配置路由实现。路由的配置可在config/common/route/下找到。具体规则可以看配置文件的注释。或者可看之后更新的路由详解小节。下面是一个正则路由配置的例子：
