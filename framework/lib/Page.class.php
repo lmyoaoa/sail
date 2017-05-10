@@ -77,7 +77,7 @@ class Page {
         if( $this->wildCard != '') {
             $queryString = $this->wildCard;
         }else{
-            $queryString = '/?' . implode('&', $queryString);
+            $queryString = '?' . implode('&', $queryString);
         }
 
         //$baseUrl = '/' . CONTROLLER_NAME . '/' . ACTION_NAME . '/';
